@@ -11,6 +11,7 @@ interface FilterPanelProps {
 
 export const FilterPanel: React.FC<FilterPanelProps> = ({ onFindLeads, isLoading }) => {
   const [location, setLocation] = useState('San Francisco, USA');
+  const [district, setDistrict] = useState('');
   const [industry, setIndustry] = useState('Restaurants');
   const [websiteStatus, setWebsiteStatus] = useState('Outdated Website');
   
@@ -18,7 +19,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({ onFindLeads, isLoading
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const filters = { location, industry, websiteStatus };
+    const filters = { location, district, industry, websiteStatus };
     lastFilters.current = filters;
     onFindLeads(filters);
   };
@@ -34,14 +35,25 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({ onFindLeads, isLoading
       <h2 className="text-xl font-bold text-sky-400 mb-4">Discover Clients</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="location" className="block text-sm font-medium text-slate-300 mb-1">Location</label>
+          <label htmlFor="location" className="block text-sm font-medium text-slate-300 mb-1">City / State</label>
           <input
             id="location"
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             className="w-full bg-slate-700 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
-            placeholder="City, Country"
+            placeholder="e.g. San Francisco, USA"
+          />
+        </div>
+        <div>
+          <label htmlFor="district" className="block text-sm font-medium text-slate-300 mb-1">District / Neighborhood (Optional)</label>
+          <input
+            id="district"
+            type="text"
+            value={district}
+            onChange={(e) => setDistrict(e.target.value)}
+            className="w-full bg-slate-700 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            placeholder="e.g. Mission District"
           />
         </div>
         <div>

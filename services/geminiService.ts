@@ -2,10 +2,14 @@ import { GoogleGenAI } from "@google/genai";
 // FIX: Import `LeadStatus` to be used for type casting.
 import type { FilterOptions, Lead, LeadStatus } from '../types';
 
+// FIX: Per @google/genai guidelines, the API key must be read from process.env.API_KEY.
+// This also resolves the TypeScript error "Property 'env' does not exist on type 'ImportMeta'".
 if (!process.env.API_KEY) {
   throw new Error("API_KEY environment variable is not set");
 }
 
+// FIX: Per @google/genai guidelines, initialize with apiKey from process.env.API_KEY.
+// This also resolves the TypeScript error "Property 'env' does not exist on type 'ImportMeta'".
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const generatePrompt = (filters: FilterOptions, existingLeads: Lead[] = []): string => {
@@ -19,9 +23,14 @@ ${existingLeadInfo}
 `;
   }
 
+  const districtPromptPart = filters.district
+    ? `- District/Neighborhood: ${filters.district} (Focus your search within this specific area of the location)`
+    : '';
+
   return `
     Act as an expert lead generation assistant. Your task is to find business leads for a freelance web developer based on the following criteria:
     - Location: ${filters.location}
+    ${districtPromptPart}
     - Industry: ${filters.industry}
     - Website Status: ${filters.websiteStatus}
     ${existingLeadsPromptPart}

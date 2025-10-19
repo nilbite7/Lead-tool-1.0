@@ -16,6 +16,7 @@ export interface Lead {
 
 export interface FilterOptions {
   location: string;
+  district: string;
   industry: string;
   websiteStatus: string;
 }
