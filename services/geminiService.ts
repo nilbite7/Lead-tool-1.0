@@ -10,7 +10,7 @@ if (!process.env.API_KEY) {
 
 // FIX: Per @google/genai guidelines, initialize with apiKey from process.env.API_KEY.
 // This also resolves the TypeScript error "Property 'env' does not exist on type 'ImportMeta'".
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY });
 
 const generatePrompt = (filters: FilterOptions, existingLeads: Lead[] = []): string => {
   let existingLeadsPromptPart = '';
