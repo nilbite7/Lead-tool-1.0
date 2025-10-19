@@ -1,0 +1,43 @@
+# .github/workflows/deploy.yml
+
+name: Build and Deploy to GitHub Pages
+
+# This workflow runs whenever you push code to your 'main' branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    # The workflow will run on a fresh Ubuntu virtual machine
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checks out your repository's code so the workflow can access it
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      # Step 2: Sets up the specific version of Node.js your project uses
+      - name: Setup Node.js ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Using Node.js version 18
+          cache: 'npm'       # Caches npm packages to speed up future builds
+
+      # Step 3: Installs your project's dependencies securely and efficiently
+      - name: Install Dependencies 📦
+        run: npm ci
+
+      # Step 4: Runs the 'build' script from your package.json to create a production-ready version of your app
+      # It securely passes your API key from GitHub Secrets into the build process
+      - name: Build Project 🏗️
+        run: npm run build
+        env:
+          VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
+
+      # Step 5: Deploys the built code (from the 'dist' folder) to the 'gh-pages' branch in your repository
+      - name: Deploy to GitHub Pages 🚀
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist # The folder Vite creates during the build
